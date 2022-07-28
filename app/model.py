@@ -1,13 +1,16 @@
 import torch
 from torch import nn
 from torchvision.utils import make_grid
-import matplotlib.pyplot as plt
+from torchvision.utils import save_image
 import torch.nn.functional as F
 import torchvision.transforms as T
+import cv2
+import numpy as np
+import matplotlib.pyplot as plt
 
 
 generator_directory = './models/ganGenerator.pt'
-n_classes = 40 
+n_classes = 40
 mnist_shape = (1, 28, 28)
 device = 'cpu'
 z_dim = 64
@@ -41,7 +44,7 @@ class Generator(nn.Module):
             output_channels: how many channels the output feature representation should have
             kernel_size: the size of each convolutional filter, equivalent to (kernel_size, kernel_size)
             stride: the stride of the convolution
-            final_layer: a boolean, true if it is the final layer and false otherwise 
+            final_layer: a boolean, true if it is the final layer and false otherwise
                       (affects activation and batchnorm)
         '''
         if not final_layer:
@@ -58,7 +61,7 @@ class Generator(nn.Module):
 
     def forward(self, noise):
         '''
-        Function for completing a forward pass of the generator: Given a noise tensor, 
+        Function for completing a forward pass of the generator: Given a noise tensor,
         returns generated images.
         Parameters:
             noise: a noise tensor with dimensions (n_samples, input_dim)
@@ -91,7 +94,7 @@ def show_tensor_images(image_tensor, num_images, size=(1, 28, 28), nrow=5, show=
     plt.figure(figsize=(16, 16))
     if show:
         plt.show()
-        
+
 
 def get_one_hot_labels(labels, n_classes):
     return F.one_hot(labels,n_classes)
@@ -108,6 +111,8 @@ def show_tensor_images(image_tensor, num_images, size=(1, 28, 28), nrow=5, show=
     plt.figure(figsize=(16, 16))
     if show:
         plt.show()
+    plt.savefig("./images/test.png", bbox_inches = "tight", pad_inches = 0.0)
+
 
 def get_model():
     generator_input_dim, discriminator_im_chan = get_input_dimensions(z_dim, mnist_shape, n_classes)
@@ -117,15 +122,15 @@ def get_model():
     return gen
 
 def get_images(num_of_examples, label, gen):
-
     num_of_examples = num_of_examples ## INPUT
 
     label = label ## INPUT this can be in the range of 0 to 39, 0 is alif, 1 is alif mad aa and so on i think this is in ascending order but im not sure
-    
+
     fake_noise = get_noise(num_of_examples, z_dim, device=device)
     one_hot_labels = get_one_hot_labels(torch.Tensor([label]).long(), n_classes).repeat(num_of_examples, 1)
     noise_and_labels = combine_vectors(fake_noise, one_hot_labels)
     fake = gen(noise_and_labels)
-    transform = T.ToPILImage()
-    img = transform(fake[0])
-    return img
+    show_tensor_images(fake, num_images = num_of_examples)
+
+def getCategories():
+    return ['alif', 'ayn', 'baa', 'daal', 'hamza', 'meem', 'seen', 'swaad', 'twa']
