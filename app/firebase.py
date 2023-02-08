@@ -2,14 +2,6 @@ import pyrebase
 import os
 from datetime import datetime
 firebaseConfig = {
-  'apiKey': "AIzaSyDexfRVzloKhyg4Jsxvlbnvg1GtjLRL488",
-  'authDomain': "urdugan-fd007.firebaseapp.com",
-  'projectId': "urdugan-fd007",
-  'databaseURL': "https://databaseName.firebaseio.com",
-  'storageBucket': "urdugan-fd007.appspot.com",
-  'messagingSenderId': "872703526029",
-  'appId': "1:872703526029:web:470644a5e72aa1c83ccec4",
-  'measurementId': "G-KBX7DHDMM8"
 }
 
 def initFirebase():
